@@ -51,7 +51,7 @@ void shipMove() {
   display.clearDisplay();
 }
 
-class enitity
+class entity
 {
   public:
     uint8_t xPosition = 0;
@@ -69,20 +69,20 @@ class renderer
 {
   public:
     entity* sprites[20];
-    numSprites = 0;
+    int numSprites = 0;
 
     renderer() {
     }
 
-    void addEntity(entity& ent) {
+    void addEntity(entity* ent) {
       sprites[numSprites] = ent;
       numSprites += 1;
     }
 
     void update() {
       for (int i = 0; i < numSprites; i++) {
-        uint8_t xPos = sprites[i].xPosition;
-        uint8_t yPox = sprites[i].yPosition;
+        uint8_t xPos = sprites[i]->xPosition;
+        uint8_t yPox = sprites[i]->yPosition;
 
       }
     }
