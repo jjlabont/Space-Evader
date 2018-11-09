@@ -1,1 +1,6 @@
-.vscode/ _vm/ Release/ * .vcxproj
+.vscode/
+__vm/
+.vs/
+Release/
+*.vcxproj
+Project_3/__vm/.Project_3.vsarduino.h
