@@ -1,5 +1,7 @@
 #include "Ship.h"
 
+Meteor::Meteor(uint8_t xPosition, uint8_t yPosition):Entity(xPosition, yPosition){};
+
 void Ship::shipMove(int yMove){
    {
       if (yPosition > 0 && yMove == 1) {

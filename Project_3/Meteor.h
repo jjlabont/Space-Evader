@@ -1,3 +1,6 @@
+#ifndef METEOR_H
+#define METEOR_H
+
 #include <stdint.h>
 #include "Entity.h"
 
@@ -9,4 +12,6 @@ class Meteor : public Entity
 
     private:
     uint8_t spd;
-}
+};
+
+#endif

@@ -21,14 +21,14 @@ int fire = 3;
 //render info
 Entity* sprites[20];
 int numSprites = 0;
-
+Ship s = Ship(0, 12);
 
 void setup()   {
   //set pinmodes
   pinMode(up, INPUT_PULLUP);
   pinMode(down, INPUT_PULLUP);
   pinMode(fire, INPUT_PULLUP);
-  
+
   Serial.begin(9600);
   display.begin(SSD1306_SWITCHCAPVCC);
   display.setTextSize(1);
@@ -36,12 +36,12 @@ void setup()   {
 
   startUp();
 
-  Ship s = Ship::Ship(0, 12);
+  addEntity(s);
 }
 
 void loop() {
   s.shipMove();
-  r.update();
+  render();
 }
 
 void render() {
