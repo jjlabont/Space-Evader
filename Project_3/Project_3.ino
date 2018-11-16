@@ -36,11 +36,16 @@ void setup()   {
 
   startUp();
 
-  addEntity(s);
+  addEntity(&s);
 }
 
 void loop() {
-  s.shipMove();
+  if (digitalRead(up) == LOW) {
+    s.shipMove(1);
+  }
+  if (digitalRead(down) == LOW) {
+    s.shipMove(-1);
+  }
   render();
 }
 

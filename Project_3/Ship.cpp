@@ -1,6 +1,6 @@
 #include "Ship.h"
 
-Meteor::Meteor(uint8_t xPosition, uint8_t yPosition):Entity(xPosition, yPosition){};
+Ship::Ship(uint8_t xPosition, uint8_t yPosition):Entity(xPosition, yPosition){};
 
 void Ship::shipMove(int yMove){
    {
