@@ -18,7 +18,8 @@ int fire = 3;
 //ship characteristics
 int yPos = 1;
 //game state
-int board[4][21];
+int board[21][4];
+
 
 void setup()   {
   //set pinmodes
@@ -26,6 +27,8 @@ void setup()   {
   pinMode(down, INPUT_PULLUP);
   pinMode(fire, INPUT_PULLUP);
 
+  board[0][3] = 1;
+  
   Serial.begin(9600);
   display.begin(SSD1306_SWITCHCAPVCC);
   display.setTextSize(1);
@@ -33,32 +36,42 @@ void setup()   {
 
   display.clearDisplay();
   display.setCursor(0, 0);
-  display.println("Hello Game!");
+  display.println("Hello World");
   display.display();
-  delay(1000);
+  delay(2000);
   display.clearDisplay();
+
 }
 
 void loop() {
+  
   if (digitalRead(up) == LOW && yPos > 0) {
+    board[0][yPos] = 0;
+    board[0][yPos - 1] = 1;
     yPos -= 1;
-    
+
   }
   if (digitalRead(down) == LOW && yPos < 3) {
+    board[0][yPos] = 0;
+    board[0][yPos + 1] = 1;
     yPos += 1;
   }
+  printBoard();
+}
 
-  //printBoard();
+void updateBoard() {
+  
+  
 }
 
 void printBoard() {
   display.clearDisplay();
   display.setCursor(0, 0);
-  char* s;
+  String s;
   for (int y = 0; y < 4; y++) {
     for (int  x = 0; x < 21; x++) {
-      char* c = convertInt(board[x][y]);
-      s = strcat(s, c);
+      String c = convertInt(board[x][y]);
+      s.concat(c);
     }
   }
   
@@ -67,9 +80,9 @@ void printBoard() {
   display.clearDisplay();
 }
 
-char* convertInt(int i) {
+String convertInt(int i) {
   if (i == 0) {
-    return "^";
+    return " ";
   }
   if (i == 1) {
     return ">";
