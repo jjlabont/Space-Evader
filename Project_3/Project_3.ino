@@ -16,9 +16,10 @@ int up = 4;
 int down = 5;
 int fire = 3;
 //ship characteristics
-int yPos = 1;
+int yPos = 0;
 //game state
 int board[21][4];
+int numLoop = 0;
 
 
 void setup()   {
@@ -27,10 +28,14 @@ void setup()   {
   pinMode(down, INPUT_PULLUP);
   pinMode(fire, INPUT_PULLUP);
 
-  board[0][3] = 1;
-  
+  //put ship at 0,0
+  board[0][0] = 1;
+
   Serial.begin(9600);
   display.begin(SSD1306_SWITCHCAPVCC);
+  //seed random
+  randomSeed(analogRead(0));
+
   display.setTextSize(1);
   display.setTextColor(WHITE);
 
@@ -38,56 +43,66 @@ void setup()   {
   display.setCursor(0, 0);
   display.println("Hello World");
   display.display();
-  delay(2000);
   display.clearDisplay();
 
 }
 
 void loop() {
-  
+
   if (digitalRead(up) == LOW && yPos > 0) {
     board[0][yPos] = 0;
-    board[0][yPos - 1] = 1;
     yPos -= 1;
-
+    board[0][yPos] = 1;
   }
   if (digitalRead(down) == LOW && yPos < 3) {
     board[0][yPos] = 0;
-    board[0][yPos + 1] = 1;
     yPos += 1;
+    board[0][yPos] = 1;
   }
+
+  updateBoard();
   printBoard();
+  //numLoop += 1;
+
+  if (numLoop <= 10) {
+    //int r = 2;
+    board[21][2] = 2;
+    numLoop = 0;
+    display.print("Wtf");
+  }
 }
 
 void updateBoard() {
-  
-  
+  for (int y = 0; y < 4; y++) {
+    for (int  x = 0; x < 21; x++) {
+      int pos = board[x][y];
+      if (pos == 2) {
+        board[x][y] = 0;
+        if (x - 1 > 0) {
+          board[x - 1][y] = 2;
+        }
+      }
+    }
+  }
 }
 
 void printBoard() {
   display.clearDisplay();
   display.setCursor(0, 0);
-  String s;
   for (int y = 0; y < 4; y++) {
     for (int  x = 0; x < 21; x++) {
-      String c = convertInt(board[x][y]);
-      s.concat(c);
+      int i = board[x][y];
+      if (i == 0) {
+        display.print(" ");
+      }
+      if (i == 1) {
+        display.print(">");
+      }
+      if (i == 2) {
+        display.print("O");
+      }
     }
   }
-  
-  display.println(s);
   display.display();
   display.clearDisplay();
-}
-
-String convertInt(int i) {
-  if (i == 0) {
-    return " ";
-  }
-  if (i == 1) {
-    return ">";
-  }
-  if (i == 2) {
-    return "O";
-  }
 }
