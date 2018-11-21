@@ -2,9 +2,6 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include "Ship.h"
-#include "Meteor.h"
-#include "Entity.h"
 
 //setting up for OLED display
 #define OLED_MOSI   9
@@ -18,10 +15,10 @@ Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 int up = 4;
 int down = 5;
 int fire = 3;
-//render info
-Entity* sprites[20];
-int numSprites = 0;
-Ship s = Ship(0, 12);
+//ship characteristics
+int yPos = 1;
+//game state
+int board[4][21];
 
 void setup()   {
   //set pinmodes
@@ -34,43 +31,50 @@ void setup()   {
   display.setTextSize(1);
   display.setTextColor(WHITE);
 
-  startUp();
-
-  addEntity(&s);
-}
-
-void loop() {
-  if (digitalRead(up) == LOW) {
-    s.shipMove(1);
-  }
-  if (digitalRead(down) == LOW) {
-    s.shipMove(-1);
-  }
-  render();
-}
-
-void render() {
-      for (int i = 0; i < numSprites; i++) {
-        uint8_t xPos = sprites[i]->xPosition;
-        uint8_t yPos = sprites[i]->yPosition;
-        int sprite = sprites[i]->sprt;
-        display.setCursor(xPos, yPos);
-        display.write(sprite);
-      }
-      display.display();
-      display.clearDisplay();
-}
-
-void addEntity(Entity* ent) {
-      sprites[numSprites] = ent;
-      numSprites += 1;
-    }
-
-void startUp() {
   display.clearDisplay();
   display.setCursor(0, 0);
-  display.println("Hello world!");
+  display.println("Hello Game!");
   display.display();
   delay(1000);
   display.clearDisplay();
+}
+
+void loop() {
+  if (digitalRead(up) == LOW && yPos > 0) {
+    yPos -= 1;
+    
+  }
+  if (digitalRead(down) == LOW && yPos < 3) {
+    yPos += 1;
+  }
+
+  //printBoard();
+}
+
+void printBoard() {
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  char* s;
+  for (int y = 0; y < 4; y++) {
+    for (int  x = 0; x < 21; x++) {
+      char* c = convertInt(board[x][y]);
+      s = strcat(s, c);
+    }
+  }
+  
+  display.println(s);
+  display.display();
+  display.clearDisplay();
+}
+
+char* convertInt(int i) {
+  if (i == 0) {
+    return "^";
+  }
+  if (i == 1) {
+    return ">";
+  }
+  if (i == 2) {
+    return "O";
+  }
 }
