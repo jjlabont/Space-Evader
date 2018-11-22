@@ -21,7 +21,7 @@ int pressed = 0;
 //game state
 int board[21][4];
 long prevTime = 0;
-long interval = 200;
+long interval = 250;
 int numUpdates = 0;
 int meteorsDodged = 0;
 
@@ -34,7 +34,7 @@ void setup()   {
 
   //put ship at 0,0
   board[0][0] = 1;
-  board[20][2] = 2;
+  
   Serial.begin(9600);
   display.begin(SSD1306_SWITCHCAPVCC);
   //seed random
@@ -79,8 +79,27 @@ void loop() {
     updateBoard();
     numUpdates += 1;
     if (numUpdates >= 12) {
-      long r = random(4);
-      board[20][r] = 2;
+      long r = random(3);
+      //single spawn
+      if (r == 0) {
+        r = random(3);
+        spawnMeteor(r);
+      }
+      //double spawn
+      if (r == 1) {
+        r = random(3);
+        long scnd = random(3);
+        while (scnd == r) {
+          scnd = random(3);
+        }
+        spawnMeteor(r);
+        spawnMeteor(scnd);
+      }
+      //triple spawn
+      if (r == 2) {
+        r = random(3);
+        spawnMeteorBut(r);
+      }
       numUpdates = 0;
     }
   }
@@ -97,17 +116,22 @@ int updateBoard() {
         if (x - 1 >= 0) {
           int nx = board[x - 1][y];
           board[x - 1][y] = 2;
-          if (nx == 1) {
-            //TODO Gameover....
+          if (nx == 1) { //if next space is ship you lose
             while (1) {
               display.clearDisplay();
               display.setCursor(0, 0);
-              display.println("You lose");
+              display.println("      Game Over");
+              display.print("      Score: ");
+              display.print(meteorsDodged);
               display.display();
             }
           }
         } else {
+          //spead up game after dodging meteors
           meteorsDodged += 1;
+          if (interval > 45) {
+          interval -= 5;
+          }
         }
       }
     }
@@ -137,6 +161,15 @@ int printBoard() {
   return 0;
 }
 
-int spawnMeteor() {
+int spawnMeteor(int row) {
+  board[20][row] = 2;
   return 0;
+}
+
+int spawnMeteorBut(int row){
+  board[20][0] = 2;
+  board[20][1] = 2;
+  board[20][2] = 2;
+  board[20][3] = 2;
+  board[20][row] = 0;
 }
