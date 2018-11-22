@@ -21,8 +21,9 @@ int pressed = 0;
 //game state
 int board[21][4];
 long prevTime = 0;
-long interval = 250;
+long interval = 200;
 int numUpdates = 0;
+int meteorsDodged = 0;
 
 
 void setup()   {
@@ -79,11 +80,11 @@ void loop() {
     numUpdates += 1;
     if (numUpdates >= 12) {
       long r = random(4);
-      //board[21][r] = 2;
+      board[20][r] = 2;
       numUpdates = 0;
     }
   }
-
+  
   printBoard();
 }
 
@@ -94,7 +95,19 @@ int updateBoard() {
       if (pos == 2) {
         board[x][y] = 0;
         if (x - 1 >= 0) {
+          int nx = board[x - 1][y];
           board[x - 1][y] = 2;
+          if (nx == 1) {
+            //TODO Gameover....
+            while (1) {
+              display.clearDisplay();
+              display.setCursor(0, 0);
+              display.println("You lose");
+              display.display();
+            }
+          }
+        } else {
+          meteorsDodged += 1;
         }
       }
     }
@@ -125,5 +138,5 @@ int printBoard() {
 }
 
 int spawnMeteor() {
-  
+  return 0;
 }
