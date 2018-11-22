@@ -14,7 +14,7 @@ Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 //pin numbers
 int up = 4;
 int down = 5;
-int fire = 3;
+
 //ship characteristics
 int yPos = 0;
 int pressed = 0;
@@ -30,11 +30,11 @@ void setup()   {
   //set pinmodes
   pinMode(up, INPUT_PULLUP);
   pinMode(down, INPUT_PULLUP);
-  pinMode(fire, INPUT_PULLUP);
 
   //put ship at 0,0
   board[0][0] = 1;
-  
+
+  //begin to display
   Serial.begin(9600);
   display.begin(SSD1306_SWITCHCAPVCC);
   //seed random
@@ -44,6 +44,7 @@ void setup()   {
   display.setTextColor(WHITE);
 
   display.clearDisplay();
+  //start info
   display.setCursor(0, 0);
   display.println("Hello Bworld");
   display.display();
@@ -121,13 +122,13 @@ int updateBoard() {
               display.clearDisplay();
               display.setCursor(0, 0);
               display.println("      Game Over");
-              display.print("      Score: ");
+              display.print(" Your Score: ");
               display.print(meteorsDodged);
               display.display();
             }
           }
         } else {
-          //spead up game after dodging meteors
+          //speed up game after dodging meteors
           meteorsDodged += 1;
           if (interval > 45) {
           interval -= 5;
