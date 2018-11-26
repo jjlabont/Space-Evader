@@ -39,16 +39,23 @@ void setup()   {
   display.begin(SSD1306_SWITCHCAPVCC);
   //seed random
   randomSeed(analogRead(0));
-
+  //minor display set up
   display.setTextSize(1);
   display.setTextColor(WHITE);
-
   display.clearDisplay();
+
   //start info
   display.setCursor(0, 0);
-  display.println("Hello Bworld");
+  display.println("Greetings!");
+  display.println("Left Btn = Down");
+  display.println("Right Btn = Up");
+  display.println("Left Btn to begin");
   display.display();
-  delay(1000);
+  while (1) {
+  if (digitalRead(down) == LOW) {
+      break;
+    }
+  }
   display.clearDisplay();
 }
 
@@ -70,27 +77,27 @@ void loop() {
     pressed = 1;
   }
 
-  if (digitalRead(down) == HIGH && digitalRead(up) == HIGH) {
+  if (digitalRead(down) == HIGH && digitalRead(up) == HIGH) { //button has to be released beore you can move again
     pressed = 0;
   }
 
-  //if threshold is passed update board
+  //if time threshold is passed update board
   if (currentTime - prevTime >= interval) {
     prevTime = currentTime;
-    updateBoard();
-    numUpdates += 1;
+    updateBoard(); //updates board
+    numUpdates += 1; // after 12 updates spawn new meteors
     if (numUpdates >= 12) {
-      long r = random(3);
+      long r = random(3); // rolls to generate meteors based on random number
       //single spawn
       if (r == 0) {
-        r = random(3);
+        r = random(3); //random to figure out row to spawn
         spawnMeteor(r);
       }
       //double spawn
       if (r == 1) {
-        r = random(3);
-        long scnd = random(3);
-        while (scnd == r) {
+        r = random(3); //random to figure out row to spawn
+        long scnd = random(3); //random to figure out 2nd row to spawn
+        while (scnd == r) { //if rows are same generate new row until they arent
           scnd = random(3);
         }
         spawnMeteor(r);
@@ -98,14 +105,14 @@ void loop() {
       }
       //triple spawn
       if (r == 2) {
-        r = random(3);
+        r = random(3); // random number to figure out row that will NOT have a meteor in it
         spawnMeteorBut(r);
       }
-      numUpdates = 0;
+      numUpdates = 0; //reset update counter
     }
   }
-  
-  printBoard();
+
+  printBoard();//print updated board
 }
 
 int updateBoard() { //updates the board to the next state
@@ -115,8 +122,8 @@ int updateBoard() { //updates the board to the next state
       if (pos == 2) { //if position is meteor move it left one space
         board[x][y] = 0; //set old position to be empty
         if (x - 1 >= 0) { // if the meteor doesnt go off the board
-          int nx = board[x - 1][y] // move meteor to left one space
-          board[x - 1][y] = 2; 
+          int nx = board[x - 1][y]; // move meteor to left one space
+          board[x - 1][y] = 2;
           if (nx == 1) { //if next space is ship you lose
             while (1) { // endgame loop, prints your score
               display.clearDisplay();
@@ -130,7 +137,7 @@ int updateBoard() { //updates the board to the next state
         } else { //if meteor goes off board
           meteorsDodged += 1; //meteors dodged increased
           if (interval > 45) { //increase game speed by lowering refreseh increment up to 40ms per refresh
-          interval -= 5;
+            interval -= 5;
           }
         }
       }
@@ -166,7 +173,7 @@ int spawnMeteor(int row) { //spawns meteor in specified row
   return 0;
 }
 
-int spawnMeteorBut(int row){ // spawns meteor in every lane EXCEPT the specified row
+int spawnMeteorBut(int row) { // spawns meteor in every lane EXCEPT the specified row
   board[20][0] = 2;
   board[20][1] = 2;
   board[20][2] = 2;
