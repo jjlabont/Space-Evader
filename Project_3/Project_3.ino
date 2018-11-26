@@ -108,29 +108,28 @@ void loop() {
   printBoard();
 }
 
-int updateBoard() {
+int updateBoard() { //updates the board to the next state
   for (int y = 0; y < 4; y++) {
     for (int  x = 0; x < 21; x++) {
       int pos = board[x][y];
-      if (pos == 2) {
-        board[x][y] = 0;
-        if (x - 1 >= 0) {
-          int nx = board[x - 1][y];
-          board[x - 1][y] = 2;
+      if (pos == 2) { //if position is meteor move it left one space
+        board[x][y] = 0; //set old position to be empty
+        if (x - 1 >= 0) { // if the meteor doesnt go off the board
+          int nx = board[x - 1][y] // move meteor to left one space
+          board[x - 1][y] = 2; 
           if (nx == 1) { //if next space is ship you lose
-            while (1) {
+            while (1) { // endgame loop, prints your score
               display.clearDisplay();
               display.setCursor(0, 0);
               display.println("      Game Over");
-              display.print(" Your Score: ");
+              display.print("    Your Score: ");
               display.print(meteorsDodged);
               display.display();
             }
           }
-        } else {
-          //speed up game after dodging meteors
-          meteorsDodged += 1;
-          if (interval > 45) {
+        } else { //if meteor goes off board
+          meteorsDodged += 1; //meteors dodged increased
+          if (interval > 45) { //increase game speed by lowering refreseh increment up to 40ms per refresh
           interval -= 5;
           }
         }
@@ -140,34 +139,34 @@ int updateBoard() {
   return 0;
 }
 
-int printBoard() {
-  display.clearDisplay();
-  display.setCursor(0, 0);
-  for (int y = 0; y < 4; y++) {
+int printBoard() { //method to print board to display
+  display.clearDisplay(); //guarantee that display is empty (shouldnt matter but is just a safeguard)
+  display.setCursor(0, 0); // set curor back to top left
+  for (int y = 0; y < 4; y++) {//loops through all xy coordinates
     for (int  x = 0; x < 21; x++) {
       int i = board[x][y];
-      if (i == 0) {
+      if (i == 0) { //if 2d array holds a 0 print an empty space
         display.print(" ");
       }
-      if (i == 1) {
+      if (i == 1) { // if 2d array holds a 1 print the ship >
         display.print(">");
       }
-      if (i == 2) {
+      if (i == 2) { // if 2d aray holds a 2 print a meteor O
         display.print("O");
       }
     }
   }
-  display.display();
-  display.clearDisplay();
+  display.display();// tells diplay to diplay new image
+  display.clearDisplay();// clears display
   return 0;
 }
 
-int spawnMeteor(int row) {
+int spawnMeteor(int row) { //spawns meteor in specified row
   board[20][row] = 2;
   return 0;
 }
 
-int spawnMeteorBut(int row){
+int spawnMeteorBut(int row){ // spawns meteor in every lane EXCEPT the specified row
   board[20][0] = 2;
   board[20][1] = 2;
   board[20][2] = 2;
