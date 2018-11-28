@@ -46,13 +46,13 @@ void setup()   {
 
   //start info
   display.setCursor(0, 0);
-  display.println("Greetings!");
+  display.println("Dodge Meteors!");
   display.println("Left Btn = Down");
   display.println("Right Btn = Up");
   display.println("Left Btn to begin");
   display.display();
   while (1) {
-  if (digitalRead(down) == LOW) {
+    if (digitalRead(down) == LOW) {
       break;
     }
   }
